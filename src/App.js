@@ -22,7 +22,7 @@ class App extends Component {
 
 // Get set Playtime
   setPlayTime = (state) => {
-    this.setState(() => ({ startTime: 1000 }));
+    this.player.seekTo(1000)
   }
 
 // set current Video
