@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import ReactPlayer from 'react-player';
 import { findDOMNode } from 'react-dom';
+import openSocket from 'socket.io-client';
+
+const socket = openSocket('http://localhost:8080');
 
 class App extends Component {
 
@@ -9,9 +12,18 @@ class App extends Component {
     currentVideo: 'https://www.youtube.com/watch?v=GOQ1WG06jxg',
     playlist: ['https://www.youtube.com/watch?v=GOQ1WG06jxg'],
     played: null,
-    duration:0
+    duration:0,
+    isMaster: false
   }
+componentDidMount() {
+  socket.on('connect', () => {
+    console.log('Connected to server.');
+  });
 
+  socket.on('disconnect', () => {
+    console.log('Disconencted from server.');
+  });
+}
 
 // NEEDED FUNCTIONS
 
@@ -39,6 +51,10 @@ class App extends Component {
     this.setState({ duration });
   }
 
+  toggelMaster = (state) => {
+    this.setState(() => ({isMaster: this.state.isMaster? false : true}) )
+  }
+
   ref = player => {
     this.player = player
   }
@@ -50,10 +66,10 @@ class App extends Component {
         ref={this.ref}
         url={this.state.currentVideo}
         config={{ youtube: { playerVars: { showinfo: 0, start: this.state.startTime }}}}
-        controls
-        playing
-        volume
-        muted
+        controls={true}
+        playing={true}
+        volume={true}
+        muted={true}
 
         onReady={() => console.log('onReady')}
         onStart={() => console.log('onStart')}
@@ -70,6 +86,7 @@ class App extends Component {
       <p>{this.getCurrentTime}</p>
       <button onClick={this.getTime}>Get Current time</button>
       <button onClick={this.setPlayTime}>Start at 1000 seconds</button>
+      <button onClick={this.toggelMaster}>{this.state.isMaster?'Is Master':'Is Slave'}</button>
 
         <form onSubmit={this.handelSetMovie}>
           <input type="text" name="setMovie" />
