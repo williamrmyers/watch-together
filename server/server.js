@@ -4,6 +4,7 @@ const path = require('path');
 const socketIO = require('socket.io');
 const http = require('http');
 
+
 const port = process.env.PORT || 8080;
 const app = express();
 const server = http.createServer(app);
@@ -27,6 +28,19 @@ app.get('/', function (req, res) {
 
 io.on('connection', (socket) => {
   console.log('New user connected.');
+
+  // Listens for time from Master
+  socket.on('masterSendStartTime', (time) => {
+    console.log('master is at', time);
+    // Should save to DB
+
+    // Sends data to slaves
+    socket.broadcast.emit('startMediaAt', {
+      time: time
+    });
+  });
+
+
 
   socket.on('disconnect', () => {
     console.log('User disconected.');
