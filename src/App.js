@@ -3,6 +3,8 @@ import ReactPlayer from 'react-player';
 import { findDOMNode } from 'react-dom';
 import openSocket from 'socket.io-client';
 import { BrowserRouter, Route, Switch, Link, NavLink, Redirect} from 'react-router-dom';
+// https://www.npmjs.com/package/react-id-generator
+import idGenerator from 'react-id-generator';
 
 const socket = openSocket('http://localhost:8080');
 
@@ -59,6 +61,18 @@ componentDidMount() {
     socket.emit('masterSendStartTime', {
       time: currentTime
     });
+  }
+  // For clients, should test if
+  // CurrentVideo === VideoFromMaster
+  // currentTime === timeFromServer
+  testCurentVideo = (data, state) => {
+    if (this.state.currentVideo !== data.currentVideo) {
+      this.setState(() => ({ currentVideo: data.currentVideo }));
+    }
+
+    if (this.state.startTime > data.time.time + 5 || this.state.startTime < data.time.time - 5) {
+        this.setState(() => ({startTime: data.time.time}))
+    }
   }
 
 // get current playtime
@@ -159,6 +173,7 @@ const AppRouter = () => (
       <Switch>
         <Route path="/" component={Home} exact={true}/>
         <Route path="/movie" component={Movie} exact={true}/>
+        <Route path="/room/:id" component={Movie} exact={true}/>
         <Route component={NotFoundPage}/>
       </Switch>
     </div>
@@ -168,7 +183,7 @@ const AppRouter = () => (
 class Home extends React.Component {
   state = {
     rooms: [
-      { id:1, name: 'Scarry Movies', currentMovie: 'Fright Night', viewers: 82 },
+      { id:1, name: 'Scary Movies', currentMovie: 'Fright Night', viewers: 82 },
       { id:2, name: 'MURDER', currentMovie: 'Hostel', viewers: 39 },
       { id:3, name: 'Nerd', currentMovie: 'StarTrek', viewers: 11 }
     ]
@@ -216,6 +231,11 @@ class RoomList extends Component {
 const NotFoundPage = () => (
   <div>
     <p>Page Not found</p>
+  </div>
+);
+const Room = () => (
+  <div>
+    <p>New Room</p>
   </div>
 );
 
