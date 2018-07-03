@@ -20,9 +20,25 @@ app.get('/', function (req, res) {
   res.sendFile(path.join(__dirname, '../build', './static/index.html'));
 });
 
-
 io.on('connection', (socket) => {
   console.log('New user connected.');
+
+  // Join Room
+  socket.on('join', (roomName, callback) => {
+
+    socket.join(roomName);
+    console.log('Joined Room');
+    // users.removeUser(socket.id);
+    // users.addUser(socket.id, params.name, params.room);
+
+    // io.to(params.room).emit('updateUserList', users.getUserList(params.room));
+
+
+    // socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
+    // socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined chat!`));
+
+    callback()
+  });
 
   // Listens for time from Master
   socket.on('masterSendStartTime', (time) => {

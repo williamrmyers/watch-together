@@ -9,7 +9,7 @@ let Room = mongoose.model('Todo', {
   },
   currentMedia:{
     type:String
-  }
+  },
   _creator: {
     type: mongoose.Schema.Types.ObjectId,
     required: true
