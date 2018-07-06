@@ -1,14 +1,19 @@
-let mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-let Room = mongoose.model('Todo', {
+const Room = mongoose.model('Room', {
   name: {
     type: String,
     required: true,
     minlength: 1,
-    trim: true
+    trim: true,
+    unique: true
   },
   currentMedia:{
     type:String
+  },
+  currentMediaStartedAt:{
+    type: Number,
+    default: null
   },
   _creator: {
     type: mongoose.Schema.Types.ObjectId,

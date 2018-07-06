@@ -14,7 +14,6 @@ const AppRouter = () => (
       <Header />
       <Switch>
         <Route path="/" component={Home} exact={true}/>
-        <Route path="/movie" component={Room} exact={true}/>
         <Route path="/room/:id" component={Room} exact={true}/>
         <Route component={NotFoundPage}/>
       </Switch>
@@ -26,7 +25,6 @@ const Header = () => (
   <header>
     <h1>Watch Together</h1>
     <NavLink to="/" activeClassName="is-active" exact={true} >Home</NavLink><br/>
-    <NavLink to="/movie" activeClassName="is-active" exact={true} >Movie</NavLink><br/>
   </header>
 );
 

@@ -1,40 +1,44 @@
 import React, { Component } from 'react';
 import openSocket from 'socket.io-client';
+import { Route, withRouter, Redirect } from 'react-router-dom';
 
 import RoomList from './roomlist';
 
 const socket = openSocket('http://localhost:8080');
+// rooms: [
+//   { id:1, name: 'Scary Movies', currentMovie: 'Fright Night', viewers: 82 },
+//   { id:2, name: 'MURDER', currentMovie: 'Hostel', viewers: 39 },
+//   { id:3, name: 'Nerd', currentMovie: 'StarTrek', viewers: 11 }
+// ]
 
 class Home extends React.Component {
   state = {
-    rooms: [
-      { id:1, name: 'Scary Movies', currentMovie: 'Fright Night', viewers: 82 },
-      { id:2, name: 'MURDER', currentMovie: 'Hostel', viewers: 39 },
-      { id:3, name: 'Nerd', currentMovie: 'StarTrek', viewers: 11 }
-    ]
+    rooms: []
+  };
+
+  componentDidMount() {
+    socket.on('sendRoomList', (data) => {
+      console.log(data);
+      this.setState(() => ({
+        rooms: data.data
+      }));
+    });
   }
 
   handelAddRoom = (e, state) => {
       e.preventDefault();
-      const roomName = e.target.elements.addNewRoom.value.trim();
+      const roomName = e.target.elements.roomName.value.trim();
       console.log(roomName);
-
-      // Joining room
-      socket.emit('join', roomName, (err) => {
-        if (err) {
-          alert(err);
-        } else {
-          console.log('No Error.');
-          // e.target.elements.addNewRoom.value = '';
-        }
-      });
+      if (roomName) {
+        this.props.history.push(`/room/${roomName}`);
+      }
     }
   render () {
     return (
       <div>
         <h2>Create a room</h2>
           <form onSubmit={this.handelAddRoom}>
-            <input autoComplete="off" placeholder="Room Name" type="text" name="addNewRoom" />
+            <input autoComplete="off" placeholder="Room Name" type="text" name="roomName" />
             <button>Create new Room</button>
           </form>
 

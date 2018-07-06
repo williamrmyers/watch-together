@@ -15,11 +15,19 @@ class Room extends Component {
     console.log('Connected to server.');
   });
 
+  socket.on('updateUserList' ,(data) => {
+    // console.log(data.rooms);
+    this.creationData(data);
+    // const currentVideo = data.rooms.currentMedia;
+    // const startTime = data.rooms.currentMediaStartedAt;
+  });
+
   if (!this.state.isMaster) {
     socket.on('startMediaAt', (data) => {
       console.log(`Slave should start at`, data);
-      this.setPlayTime(data.time.time);
-      this.setState(() => ({startTime: data.time.time}))
+      // this.setPlayTime(data.time.time);
+      this.setState(() => ({ startTime: data.time.time }));
+      // this.testCurentVideo(data.time);
     });
   }
 
@@ -30,17 +38,31 @@ class Room extends Component {
 
   state={
     startTime: 0,
-    currentVideo: 'https://www.youtube.com/watch?v=GOQ1WG06jxg',
-    playlist: ['https://www.youtube.com/watch?v=GOQ1WG06jxg', 'https://www.youtube.com/watch?v=7G-SvFN5C6M'],
+    currentVideo: false,
+    playlist: [],
     played: null,
-    duration:0,
-    isMaster: false
+    duration: 0,
+    creator: false,
+    roomName: false,
+    nickName: false
   }
-componentDidMount() {
-
-}
+// componentDidMount() {
+//
+// }
 
 // NEEDED FUNCTIONS
+
+  creationData = (data) => {
+    console.log(data);
+    console.log(data.rooms[0].currentMedia);
+    this.setState(() =>({
+      startTime: data.rooms[0].currentMediaStartedAt,
+      currentVideo: data.rooms[0].currentMedia,
+      roomName: data.rooms[0].room,
+      creator: data.rooms[0]._creator,
+      nickName: data.users
+    }))
+  }
 
   setStartTime = () => {
     // Send Master start time to server
@@ -55,12 +77,13 @@ componentDidMount() {
   // CurrentVideo === VideoFromMaster
   // currentTime === timeFromServer
   testCurentVideo = (data, state) => {
-    if (this.state.currentVideo !== data.currentVideo) {
-      this.setState(() => ({ currentVideo: data.currentVideo }));
-    }
+    // if (this.state.currentVideo !== data.currentVideo) {
+    //   this.setState(() => ({ currentVideo: data.currentVideo }));
+    // }
 
-    if (this.state.startTime > data.time.time + 5 || this.state.startTime < data.time.time - 5) {
-        this.setState(() => ({startTime: data.time.time}))
+    if (this.state.startTime > data.time + 5 || this.state.startTime < data.time - 5) {
+        // this.setState(() => ({startTime: data.time.time}))
+        this.setPlayTime(data.time.time);
     }
   }
 
@@ -80,7 +103,7 @@ componentDidMount() {
     const currentVideo = e.target.elements.setMovie.value.trim();
     this.setState(() => ({ currentVideo }));
     e.target.elements.setMovie.value = '';
-    }
+  }
 // Add to playlist
   handelAddToPlaylist = (e, state) => {
     e.preventDefault();
@@ -92,14 +115,27 @@ componentDidMount() {
     console.log(e.target.innerHTML);
   }
 
-  onDuration = (duration) => {
-    console.log('onDuration', duration)
-    this.setState({ duration });
-  }
+  // onDuration = (duration) => {
+  //   console.log('onDuration', duration)
+  //   this.setState({ duration });
+  // }
 
-  toggelMaster = (state) => {
-    this.setState(() => ({isMaster: this.state.isMaster? false : true}) )
-  }
+  handelAddRoom = (e, state) => {
+      e.preventDefault();
+      const roomName = e.target.elements.roomName.value.trim();
+      const nickName = e.target.elements.nickName.value.trim();
+      const video = e.target.elements.video.value.trim();
+
+      // Creating room
+      socket.emit('createRoom', { roomName, nickName, video}, (err) => {
+        if (err) {
+          alert(err);
+        } else {
+          console.log('No Error.');
+          // e.target.elements.addNewRoom.value = '';
+        }
+      });
+    }
 
   ref = player => {
     this.player = player
@@ -108,36 +144,43 @@ componentDidMount() {
   render() {
     return (
       <div className="App">
-      <ReactPlayer
-        ref={this.ref}
-        url={this.state.currentVideo}
-        config={{ youtube: { playerVars: { showinfo: 0, start: this.state.startTime }}}}
-        controls={true}
-        playing={true}
-        muted={true}
+        <h2>Create a room</h2>
+          <form onSubmit={this.handelAddRoom}>
+            <input autoComplete="off" placeholder="Room Name" type="text" value={window.location.href.split("/")[4]} name="roomName" />
+            <input autoComplete="off" placeholder="Chat Nickname" type="text" name="nickName" />
+            <input autoComplete="off" placeholder="Youtube Video" type="text" name="video" />
+            <button>Start Movie</button>
+          </form>
 
-        onReady={() => console.log('onReady')}
-        onStart={() => console.log('onStart')}
-        onPlay={this.onPlay}
-        onPause={this.onPause}
-        onBuffer={() => console.log('onBuffer')}
-        onSeek={e => console.log('onSeek', e)}
-        onEnded={this.onEnded}
-        onError={e => console.log('onError', e)}
-        onProgress={this.onProgress}
-        onDuration={this.onDuration}
-        onPlaying={this.onPlaying}
-        />
+          <ReactPlayer
+            ref={this.ref}
+            url={this.state.currentVideo}
+            config={{ youtube: { playerVars: { showinfo: 0, start: this.state.startTime }}}}
+            controls={true}
+            playing={true}
+            muted={true}
+
+            onReady={() => console.log('onReady')}
+            onStart={() => console.log('onStart')}
+            onPlay={this.onPlay}
+            onPause={this.onPause}
+            onBuffer={() => console.log('onBuffer')}
+            onSeek={e => console.log('onSeek', e)}
+            onEnded={this.onEnded}
+            onError={e => console.log('onError', e)}
+            onProgress={this.onProgress}
+            onDuration={this.onDuration}
+            onPlaying={this.onPlaying}
+            />
 
       <button onClick={this.getTime}>Get Current time</button>
-      <button onClick={this.setPlayTime}>Start at 1000 seconds</button>
-      <button onClick={this.toggelMaster}>{this.state.isMaster?'Is Master':'Is Slave'}</button>
       <button onClick={this.setStartTime}>Set Start time</button>
 
         <form onSubmit={this.handelSetMovie}>
           <input autoComplete="off" type="text" name="setMovie" />
           <button>Set Movie</button>
         </form>
+        <button>Start Movie</button>
 
         <form onSubmit={this.handelAddToPlaylist}>
           <input autoComplete="off" type="text" name="addToPlaylist" />
