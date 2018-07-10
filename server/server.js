@@ -57,7 +57,7 @@ io.on('connection', (socket) => {
       });
 
       room.save().then((doc)=>{
-        console.log(`Saved`, doc);
+        // console.log(`Saved`, doc);
         socket.join(userData.roomName);
         console.log('Created Room');
 
@@ -67,14 +67,13 @@ io.on('connection', (socket) => {
 
         // fetch rooms from mongoose
         Room.find({"name": userData.roomName}).then((data) => {
-          console.log(data);
           io.to(userData.roomName).emit('updateUserList', { rooms: data ,users: users.getUserList(userData.roomName)});
         }, (e) => {
           console.log(`error getting rooms`, e);
         });
 
-        console.log(userData.roomName);
-        console.log("Garbage", users.getUserList(userData.roomName));
+        // console.log(userData.roomName);
+        // console.log("Garbage", users.getUserList(userData.roomName));
 
       }, (e)=>{
         console.log(`There was an error`, e);
@@ -84,7 +83,6 @@ io.on('connection', (socket) => {
   });
 
   Room.find({}).then((data) => {
-    console.log(data);
     socket.emit('sendRoomList', {data});
   }, (e) => {
     console.log(`error getting rooms`, e);
@@ -92,17 +90,22 @@ io.on('connection', (socket) => {
 
   // Join Room for regular users.
   socket.on('join', (userData, callback) => {
+    console.log(userData);
 
-    // socket.join(userData.roomName);
-    // console.log('Joined Room');
-    //
-    //
-    // users.removeUser(socket.id);
-    // users.addUser(socket.id, params.name, params.room);
+    socket.join(userData.roomName);
 
+    Room.find({"name": userData.roomName.roomName}).then((data) => {
+      io.to(userData.roomName).emit('updateUserList', { rooms: data ,users: users.getUserList(userData.roomName)});
+    }, (e) => {
+      console.log(`error getting rooms`, e);
+    });
+
+    users.removeUser(socket.id);
+    users.addUser(socket.id, 'client name', userData.roomName);
+    //
     // io.to(params.room).emit('updateUserList', users.getUserList(params.room));
-
-
+    //
+    //
     // socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
     // socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined chat!`));
 

@@ -12,17 +12,32 @@ const socket = openSocket('http://localhost:8080');
 // ]
 
 class Home extends React.Component {
-  state = {
-    rooms: []
-  };
+  constructor(props) {
+    super(props)
 
-  componentDidMount() {
+      socket.on('sendRoomList', (data) => {
+        console.log('sendRoomList', data);
+        this.setState(() => ({
+          rooms: data.data
+        }));
+      });
+
+
+    this.state = {
+      rooms: []
+    };
+  }
+
+
+  componentWillUpdate (props) {
+    console.log('shouldComponentUpdate');
     socket.on('sendRoomList', (data) => {
-      console.log(data);
+      console.log('sendRoomList', data);
       this.setState(() => ({
         rooms: data.data
       }));
     });
+    return true;
   }
 
   handelAddRoom = (e, state) => {

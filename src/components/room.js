@@ -16,20 +16,13 @@ class Room extends Component {
   });
 
   socket.on('updateUserList' ,(data) => {
-    // console.log(data.rooms);
+    console.log(data);
     this.creationData(data);
+    // this.joinData(data);
+    console.log('updateUserList: ',data);
     // const currentVideo = data.rooms.currentMedia;
     // const startTime = data.rooms.currentMediaStartedAt;
   });
-
-  if (!this.state.isMaster) {
-    socket.on('startMediaAt', (data) => {
-      console.log(`Slave should start at`, data);
-      // this.setPlayTime(data.time.time);
-      this.setState(() => ({ startTime: data.time.time }));
-      // this.testCurentVideo(data.time);
-    });
-  }
 
   socket.on('disconnect', () => {
     console.log('Disconencted from server.');
@@ -44,17 +37,20 @@ class Room extends Component {
     duration: 0,
     creator: false,
     roomName: false,
-    nickName: false
+    nickName: false,
+    timeToStart:0,
+    currentMediaStartedAt:0
   }
-// componentDidMount() {
-//
-// }
 
-// NEEDED FUNCTIONS
+  componentDidMount(state) {
+    const roomName = window.location.href.split("/")[4];
+
+    if (!this.state.creator) {
+      this.joinRoom({roomName});
+    }
+  }
 
   creationData = (data) => {
-    console.log(data);
-    console.log(data.rooms[0].currentMedia);
     this.setState(() =>({
       startTime: data.rooms[0].currentMediaStartedAt,
       currentVideo: data.rooms[0].currentMedia,
@@ -64,28 +60,41 @@ class Room extends Component {
     }))
   }
 
-  setStartTime = () => {
-    // Send Master start time to server
-    const currentTime = this.player.getCurrentTime();
+  joinData = (data) => {
+    console.log(`joinData: `, data);
+    this.setState(() =>({
+      startTime: data.rooms[0].currentMediaStartedAt,
+      currentVideo: data.rooms[0].currentMedia,
+      roomName: data.rooms[0].room,
+      creator: data.rooms[0]._creator,
+      nickName: data.users
+    }))
+  }
 
-    console.log(`Current time`, currentTime);
-    socket.emit('masterSendStartTime', {
-      time: currentTime
+  joinRoom = (roomName) => {
+    socket.emit('join', { roomName: roomName }, (err) => {
+      if (err) {
+        alert(err);
+      } else {
+        console.log('No Error.');
+      }
     });
   }
+
+
   // For clients, should test if
   // CurrentVideo === VideoFromMaster
   // currentTime === timeFromServer
-  testCurentVideo = (data, state) => {
-    // if (this.state.currentVideo !== data.currentVideo) {
-    //   this.setState(() => ({ currentVideo: data.currentVideo }));
-    // }
-
-    if (this.state.startTime > data.time + 5 || this.state.startTime < data.time - 5) {
-        // this.setState(() => ({startTime: data.time.time}))
-        this.setPlayTime(data.time.time);
-    }
-  }
+  // testCurentVideo = (data, state) => {
+  //   if (this.state.currentVideo !== data.currentVideo) {
+  //     this.setState(() => ({ currentVideo: data.currentVideo }));
+  //   }
+  //
+  //   if (this.state.startTime > data.time + 5 || this.state.startTime < data.time - 5) {
+  //       // this.setState(() => ({startTime: data.time.time}))
+  //       this.setPlayTime(data.time.time);
+  //   }
+  // }
 
 // get current playtime
   getTime = () => {
@@ -132,6 +141,7 @@ class Room extends Component {
           alert(err);
         } else {
           console.log('No Error.');
+          this.setState(() => ({creator: true }));
           // e.target.elements.addNewRoom.value = '';
         }
       });
@@ -155,7 +165,7 @@ class Room extends Component {
           <ReactPlayer
             ref={this.ref}
             url={this.state.currentVideo}
-            config={{ youtube: { playerVars: { showinfo: 0, start: this.state.startTime }}}}
+            config={{ youtube: { playerVars: { showinfo: 0, start: this.state.timeToStart }}}}
             controls={true}
             playing={true}
             muted={true}
