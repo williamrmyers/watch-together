@@ -17,7 +17,6 @@ class Home extends React.Component {
 
       socket.on('sendRoomList', (data) => {
         console.log('sendRoomList', data);
-        console.log(this.props);
         this.setState(() => ({
           rooms: data.data
         }));
@@ -47,7 +46,7 @@ class Home extends React.Component {
       this.props.setRoomName(roomName);
       console.log(roomName);
       if (roomName) {
-        // this.props.history.push(`/room/${roomName}`);
+        this.props.history.push(`/room/${roomName}`);
       }
     }
   render () {

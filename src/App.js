@@ -7,21 +7,12 @@ import idGenerator from 'react-id-generator';
 import Router from './router';
 
 class App extends Component {
-  constructor(props){
-  super(props);
-this.state = {
-  isLoggedIn: false,
-  roomName: false
-  };
-this.loginCurrentUser = this.loginCurrentUser.bind(this);
-this.logoutCurrentUser = this.logoutCurrentUser.bind(this);
-this.toggleLogin = this.toggleLogin.bind(this);
-}
 
-    // state = {
-    //   isLoggedIn: false,
-    //   roomName: false
-    // };
+    state = {
+      isLoggedIn: false,
+      roomName: false,
+      isCreator: false
+    };
 
     loginCurrentUser = () =>{
       this.setState(() => ({ isLoggedIn: true }));
@@ -36,7 +27,10 @@ this.toggleLogin = this.toggleLogin.bind(this);
     }
 
     setRoomName = (roomName) => {
-      this.setState(() => ({roomName}));
+      this.setState(() => ({
+        roomName,
+        isCreator: true
+      }));
     }
 
 

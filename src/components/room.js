@@ -3,6 +3,7 @@ import ReactPlayer from 'react-player';
 import { Link } from 'react-router-dom';
 import openSocket from 'socket.io-client';
 import idGenerator from 'react-id-generator';
+import moment from 'moment';
 
 import Playlist from './playlist';
 
@@ -28,6 +29,7 @@ class Room extends Component {
   socket.on('disconnect', () => {
     console.log('Disconencted from server.');
   });
+  console.log(this.props);
 }
 
   state={
@@ -44,11 +46,12 @@ class Room extends Component {
   }
 
   componentDidMount(state) {
-    const roomName = window.location.href.split("/")[4];
+    const roomName = decodeURI(window.location.href.split("/")[4]);
 
-    if (!this.state.creator) {
+    if (!this.props.isCreator) {
       this.joinRoom({roomName});
     }
+    this.syncMovie();
   }
 
   creationData = (data) => {
@@ -107,6 +110,19 @@ class Room extends Component {
     this.player.seekTo(data);
   }
 
+  syncMovie = (state) => {
+    const currentTime = moment().unix();
+    const startTime = this.state.startTime;
+    const movieAt = currentTime - startTime;
+    this.player.seekTo(movieAt);
+
+    console.log({
+      StartTime: startTime,
+      currentTime,
+      at: currentTime - startTime
+    });
+  }
+
 // set current Video
   handelSetMovie = (e) => {
     e.preventDefault();
@@ -158,7 +174,7 @@ class Room extends Component {
         <Link to="/" >Home</Link>
         <h2>Create a room</h2>
           <form onSubmit={this.handelAddRoom}>
-            <input autoComplete="off" placeholder="Room Name" type="text" value={window.location.href.split("/")[4]} name="roomName" />
+            <input autoComplete="off" placeholder="Room Name" type="text" value={decodeURI(window.location.href.split("/")[4])} name="roomName" />
             <input autoComplete="off" placeholder="Chat Nickname" type="text" name="nickName" />
             <input autoComplete="off" placeholder="Youtube Video" type="text" name="video" />
             <button>Start Movie</button>
@@ -193,11 +209,15 @@ class Room extends Component {
           <button>Set Movie</button>
         </form>
         <button>Start Movie</button>
+        <br/>
+        <br/>
+        <button onClick={this.syncMovie}>Sync</button>
 
         <form onSubmit={this.handelAddToPlaylist}>
           <input autoComplete="off" type="text" name="addToPlaylist" />
           <button>Add to playlist</button>
         </form>
+
 
         <h3>Start time is {this.state.startTime}</h3>
         <Playlist
