@@ -17,6 +17,7 @@ class Home extends React.Component {
 
       socket.on('sendRoomList', (data) => {
         console.log('sendRoomList', data);
+        console.log(this.props);
         this.setState(() => ({
           rooms: data.data
         }));
@@ -30,9 +31,9 @@ class Home extends React.Component {
 
 
   componentWillUpdate (props) {
-    console.log('shouldComponentUpdate');
+    // console.log('shouldComponentUpdate');
     socket.on('sendRoomList', (data) => {
-      console.log('sendRoomList', data);
+      // console.log('sendRoomList', data);
       this.setState(() => ({
         rooms: data.data
       }));
@@ -40,12 +41,13 @@ class Home extends React.Component {
     return true;
   }
 
-  handelAddRoom = (e, state) => {
+  handelAddRoom = (e, state, props) => {
       e.preventDefault();
       const roomName = e.target.elements.roomName.value.trim();
+      this.props.setRoomName(roomName);
       console.log(roomName);
       if (roomName) {
-        this.props.history.push(`/room/${roomName}`);
+        // this.props.history.push(`/room/${roomName}`);
       }
     }
   render () {

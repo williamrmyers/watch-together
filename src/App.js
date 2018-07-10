@@ -4,22 +4,70 @@ import { BrowserRouter, Route, Switch, Link, NavLink, Redirect} from 'react-rout
 // https://www.npmjs.com/package/react-id-generator
 import idGenerator from 'react-id-generator';
 
-import Home from './components/home';
-import Room from './components/room';
-import NotFoundPage from './components/notfound';
+import Router from './router';
 
-const AppRouter = () => (
-  <BrowserRouter>
-    <div>
-      <Header />
-      <Switch>
-        <Route path="/" component={Home} exact={true}/>
-        <Route path="/room/:id" component={Room} exact={true}/>
-        <Route component={NotFoundPage}/>
-      </Switch>
-    </div>
-  </BrowserRouter>
-);
+class App extends Component {
+  constructor(props){
+  super(props);
+this.state = {
+  isLoggedIn: false,
+  roomName: false
+  };
+this.loginCurrentUser = this.loginCurrentUser.bind(this);
+this.logoutCurrentUser = this.logoutCurrentUser.bind(this);
+this.toggleLogin = this.toggleLogin.bind(this);
+}
+
+    // state = {
+    //   isLoggedIn: false,
+    //   roomName: false
+    // };
+
+    loginCurrentUser = () =>{
+      this.setState(() => ({ isLoggedIn: true }));
+    }
+
+    logoutCurrentUser = () =>{
+      this.setState(() => ({ isLoggedIn: false }));
+    }
+
+    toggleLogin = (state) => {
+      this.setState(() =>({ isLoggedIn: this.state.isLoggedIn? false : true }));
+    }
+
+    setRoomName = (roomName) => {
+      this.setState(() => ({roomName}));
+    }
+
+
+
+  render() {
+    return (
+      <div className="App">
+        <Router
+          {...this.state}
+          loginCurrentUser={this.loginCurrentUser}
+          logoutCurrentUser={this.logoutCurrentUser}
+          toggleLogin={this.toggleLogin}
+          setRoomName={this.setRoomName}
+        />
+      </div>
+    );
+  }
+}
+
+// const AppRouter = () => (
+//   <BrowserRouter>
+//     <div>
+//       <Header />
+//       <Switch>
+//         <Route path="/" component={Home} exact={true}/>
+//         <Route path="/room/:id" component={Room} exact={true}/>
+//         <Route component={NotFoundPage}/>
+//       </Switch>
+//     </div>
+//   </BrowserRouter>
+// );
 
 const Header = () => (
   <header>
@@ -28,4 +76,4 @@ const Header = () => (
   </header>
 );
 
-export default AppRouter;
+export default App;

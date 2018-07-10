@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactPlayer from 'react-player';
+import { Link } from 'react-router-dom';
 import openSocket from 'socket.io-client';
 import idGenerator from 'react-id-generator';
 
@@ -153,7 +154,8 @@ class Room extends Component {
 
   render() {
     return (
-      <div className="App">
+      <div>
+        <Link to="/" >Home</Link>
         <h2>Create a room</h2>
           <form onSubmit={this.handelAddRoom}>
             <input autoComplete="off" placeholder="Room Name" type="text" value={window.location.href.split("/")[4]} name="roomName" />
