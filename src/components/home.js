@@ -43,10 +43,12 @@ class Home extends React.Component {
   handelAddRoom = (e, state, props) => {
       e.preventDefault();
       const roomName = e.target.elements.roomName.value.trim();
-      this.props.setRoomName(roomName);
-      console.log(roomName);
-      if (roomName) {
+      const nickName = e.target.elements.nickName.value.trim();
+      const video = e.target.elements.video.value.trim();
+      // console.log(roomName);
+      if ("Validation") {
         this.props.history.push(`/room/${roomName}`);
+        this.props.setRoomName({roomName, nickName, video});
       }
     }
   render () {
@@ -55,6 +57,8 @@ class Home extends React.Component {
         <h2>Create a room</h2>
           <form onSubmit={this.handelAddRoom}>
             <input autoComplete="off" placeholder="Room Name" type="text" name="roomName" />
+            <input autoComplete="off" placeholder="Chat Nickname" type="text" name="nickName" />
+            <input autoComplete="off" placeholder="Youtube Video" type="text" name="video" />
             <button>Create new Room</button>
           </form>
 

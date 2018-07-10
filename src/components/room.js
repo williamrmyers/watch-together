@@ -12,18 +12,14 @@ const socket = openSocket('http://localhost:8080');
 class Room extends Component {
   constructor(props)
 {
-  super(props)
+  super(props);
   socket.on('connect', () => {
     console.log('Connected to server.');
   });
 
   socket.on('updateUserList' ,(data) => {
-    console.log('updateUserList' ,data.rooms);
+    console.log('updateUserList', data.rooms);
     this.creationData(data);
-    // this.joinData(data);
-    console.log('updateUserList: ',data);
-    // const currentVideo = data.rooms.currentMedia;
-    // const startTime = data.rooms.currentMediaStartedAt;
   });
 
   socket.on('disconnect', () => {
@@ -45,11 +41,23 @@ class Room extends Component {
     currentMediaStartedAt:0
   }
 
-  componentDidMount(state) {
+  componentDidMount(props) {
     const roomName = decodeURI(window.location.href.split("/")[4]);
 
     if (!this.props.isCreator) {
       this.joinRoom({roomName});
+    }
+
+    if (this.props.isCreator) {
+
+      const createRoomData = { roomName: this.props.roomName, nickName: this.props.nickName, video: this.props.video }
+      socket.emit('createRoom', createRoomData, (err) => {
+        if (err) {
+          alert(err);
+        } else {
+          console.log('No Error.');
+        }
+      });
     }
   }
 
@@ -61,17 +69,6 @@ class Room extends Component {
       creator: data.rooms[0]._creator,
       nickName: data.users
     }))
-  }
-
-  joinData = (data) => {
-    console.log(`joinData: `, data);
-    this.setState(() =>({
-      startTime: data.rooms[0].currentMediaStartedAt,
-      currentVideo: data.rooms[0].currentMedia,
-      roomName: data.rooms[0].room,
-      creator: data.rooms[0]._creator,
-      nickName: data.users
-    }));
   }
 
   joinRoom = (roomName) => {
@@ -107,13 +104,6 @@ class Room extends Component {
     });
   }
 
-// set current Video
-  handelSetMovie = (e) => {
-    e.preventDefault();
-    const currentVideo = e.target.elements.setMovie.value.trim();
-    this.setState(() => ({ currentVideo }));
-    e.target.elements.setMovie.value = '';
-  }
 // Add to playlist
   handelAddToPlaylist = (e, state) => {
     e.preventDefault();
@@ -135,24 +125,6 @@ class Room extends Component {
   //   this.setState({ duration });
   // }
 
-  handelAddRoom = (e, state) => {
-      e.preventDefault();
-      const roomName = e.target.elements.roomName.value.trim();
-      const nickName = e.target.elements.nickName.value.trim();
-      const video = e.target.elements.video.value.trim();
-
-      // Creating room
-      socket.emit('createRoom', { roomName, nickName, video}, (err) => {
-        if (err) {
-          alert(err);
-        } else {
-          console.log('No Error.');
-          this.setState(() => ({creator: true }));
-          // e.target.elements.addNewRoom.value = '';
-        }
-      });
-    }
-
   ref = player => {
     this.player = player
   }
@@ -161,14 +133,6 @@ class Room extends Component {
     return (
       <div>
         <Link to="/" >Home</Link>
-        <h2>Create a room</h2>
-          <form onSubmit={this.handelAddRoom}>
-            <input autoComplete="off" placeholder="Room Name" type="text" value={decodeURI(window.location.href.split("/")[4])} name="roomName" />
-            <input autoComplete="off" placeholder="Chat Nickname" type="text" name="nickName" />
-            <input autoComplete="off" placeholder="Youtube Video" type="text" name="video" />
-            <button>Start Movie</button>
-          </form>
-
           <ReactPlayer
             ref={this.ref}
             url={this.state.currentVideo}
