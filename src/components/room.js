@@ -18,7 +18,7 @@ class Room extends Component {
   });
 
   socket.on('updateUserList' ,(data) => {
-    console.log(data);
+    console.log('updateUserList' ,data.rooms);
     this.creationData(data);
     // this.joinData(data);
     console.log('updateUserList: ',data);
@@ -51,7 +51,6 @@ class Room extends Component {
     if (!this.props.isCreator) {
       this.joinRoom({roomName});
     }
-    this.syncMovie();
   }
 
   creationData = (data) => {
@@ -72,11 +71,11 @@ class Room extends Component {
       roomName: data.rooms[0].room,
       creator: data.rooms[0]._creator,
       nickName: data.users
-    }))
+    }));
   }
 
   joinRoom = (roomName) => {
-    socket.emit('join', { roomName: roomName }, (err) => {
+    socket.emit('join', roomName , (err) => {
       if (err) {
         alert(err);
       } else {
@@ -84,21 +83,6 @@ class Room extends Component {
       }
     });
   }
-
-
-  // For clients, should test if
-  // CurrentVideo === VideoFromMaster
-  // currentTime === timeFromServer
-  // testCurentVideo = (data, state) => {
-  //   if (this.state.currentVideo !== data.currentVideo) {
-  //     this.setState(() => ({ currentVideo: data.currentVideo }));
-  //   }
-  //
-  //   if (this.state.startTime > data.time + 5 || this.state.startTime < data.time - 5) {
-  //       // this.setState(() => ({startTime: data.time.time}))
-  //       this.setPlayTime(data.time.time);
-  //   }
-  // }
 
 // get current playtime
   getTime = () => {
@@ -137,6 +121,11 @@ class Room extends Component {
     this.setState(() => ({ playlist: [...this.state.playlist, video ] }));
     e.target.elements.addToPlaylist.value = '';
   }
+  movieStarted = () => {
+    console.log(`movieStarted`);
+    this.syncMovie();
+  }
+
   playItem = (e) => {
     console.log(e.target.innerHTML);
   }
@@ -183,13 +172,13 @@ class Room extends Component {
           <ReactPlayer
             ref={this.ref}
             url={this.state.currentVideo}
-            config={{ youtube: { playerVars: { showinfo: 0, start: this.state.timeToStart }}}}
+            config={{ youtube: { playerVars: { showinfo: 0 }}}}
             controls={true}
             playing={true}
             muted={true}
 
             onReady={() => console.log('onReady')}
-            onStart={() => console.log('onStart')}
+            onStart={this.movieStarted}
             onPlay={this.onPlay}
             onPause={this.onPause}
             onBuffer={() => console.log('onBuffer')}
@@ -200,15 +189,6 @@ class Room extends Component {
             onDuration={this.onDuration}
             onPlaying={this.onPlaying}
             />
-
-      <button onClick={this.getTime}>Get Current time</button>
-      <button onClick={this.setStartTime}>Set Start time</button>
-
-        <form onSubmit={this.handelSetMovie}>
-          <input autoComplete="off" type="text" name="setMovie" />
-          <button>Set Movie</button>
-        </form>
-        <button>Start Movie</button>
         <br/>
         <br/>
         <button onClick={this.syncMovie}>Sync</button>
@@ -218,8 +198,6 @@ class Room extends Component {
           <button>Add to playlist</button>
         </form>
 
-
-        <h3>Start time is {this.state.startTime}</h3>
         <Playlist
           movies={this.state.playlist}
           playItem={this.playItem}

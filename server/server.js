@@ -94,8 +94,9 @@ io.on('connection', (socket) => {
 
     socket.join(userData.roomName);
 
-    Room.find({"name": userData.roomName.roomName}).then((data) => {
-      io.to(userData.roomName).emit('updateUserList', { rooms: data ,users: users.getUserList(userData.roomName)});
+    Room.find({"name": userData.roomName}).then((data) => {
+      console.log('Join room info', userData);
+      io.in(userData.roomName).emit('updateUserList', { rooms: data ,users: users.getUserList(userData.roomName)});
     }, (e) => {
       console.log(`error getting rooms`, e);
     });
