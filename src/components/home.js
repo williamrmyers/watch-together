@@ -13,15 +13,8 @@ const socket = openSocket('http://localhost:8080');
 
 class Home extends React.Component {
   constructor(props) {
-    super(props)
-
-      socket.on('sendRoomList', (data) => {
-        console.log('sendRoomList', data);
-        this.setState(() => ({
-          rooms: data.data
-        }));
-      });
-
+    super(props);
+    this.getRoomList();
 
     this.state = {
       rooms: []
@@ -29,7 +22,11 @@ class Home extends React.Component {
   }
 
 
-  componentWillUpdate (props) {
+  componentDidMount (props) {
+    this.getRoomList();
+  }
+
+  getRoomList = () => {
     // console.log('shouldComponentUpdate');
     socket.on('sendRoomList', (data) => {
       // console.log('sendRoomList', data);
