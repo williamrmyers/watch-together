@@ -71,10 +71,6 @@ io.on('connection', (socket) => {
         }, (e) => {
           console.log(`error getting rooms`, e);
         });
-
-        // console.log(userData.roomName);
-        // console.log("Garbage", users.getUserList(userData.roomName));
-
       }, (e)=>{
         console.log(`There was an error`, e);
         callback('Room already exists.');
@@ -82,7 +78,7 @@ io.on('connection', (socket) => {
       callback();
   });
 
-  Room.find({}).then((data) => {
+  Room.find({}).sort('-currentMediaStartedAt').then((data) => {
     socket.emit('sendRoomList', {data});
   }, (e) => {
     console.log(`error getting rooms`, e);
