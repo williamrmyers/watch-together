@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
 import { BrowserRouter, Route, Switch, Link, NavLink, Redirect} from 'react-router-dom';
-// https://www.npmjs.com/package/react-id-generator
-import idGenerator from 'react-id-generator';
+
+import './App.css';
 
 import Router from './router';
 

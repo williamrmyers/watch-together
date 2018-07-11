@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import ReactPlayer from 'react-player';
 import { Link } from 'react-router-dom';
 import openSocket from 'socket.io-client';
-import idGenerator from 'react-id-generator';
 import moment from 'moment';
 
 import Playlist from './playlist';
@@ -18,10 +17,9 @@ class Room extends Component {
   });
 
   socket.on('updateUserList' ,(data) => {
-    console.log('updateUserList', data.rooms);
+    console.log('updateUserList', data);
     this.creationData(data);
   });
-
   socket.on('disconnect', () => {
     console.log('Disconencted from server.');
   });
@@ -38,16 +36,11 @@ class Room extends Component {
     roomName: false,
     nickName: false,
     timeToStart:0,
-    currentMediaStartedAt:0
+    currentMediaStartedAt:0,
+    messages: []
   }
 
   componentDidMount(props) {
-    const roomName = decodeURI(window.location.href.split("/")[4]);
-
-    if (!this.props.isCreator) {
-      this.joinRoom({roomName});
-    }
-
     if (this.props.isCreator) {
 
       const createRoomData = { roomName: this.props.roomName, nickName: this.props.nickName, video: this.props.video }
@@ -59,6 +52,11 @@ class Room extends Component {
         }
       });
     }
+    // Get new Messages
+    socket.on(`newMessage`, (message) => {
+    this.newMessage(message);
+    console.log(message);
+  });
   }
 
   creationData = (data) => {
@@ -66,19 +64,30 @@ class Room extends Component {
       startTime: data.rooms[0].currentMediaStartedAt,
       currentVideo: data.rooms[0].currentMedia,
       roomName: data.rooms[0].room,
-      creator: data.rooms[0]._creator,
-      nickName: data.users
-    }))
+      creator: data.rooms[0]._creator
+    }));
   }
 
-  joinRoom = (roomName) => {
-    socket.emit('join', roomName , (err) => {
+  joinRoom = (userData) => {
+    socket.emit('join', userData , (err) => {
       if (err) {
         alert(err);
       } else {
         console.log('No Error.');
       }
     });
+  }
+  newMessage = (message, prevState) => {
+    this.setState((prevState) => ({ messages: [...prevState.messages, { "nickName": "Test User", "text": message }] }));
+  }
+  setNickname = (nickName) => {
+    console.log(nickName);
+    this.setState(() => ({ nickName }));
+
+    const roomName = decodeURI(window.location.href.split("/")[4]);
+    if (!this.props.isCreator) {
+      this.joinRoom({roomName, nickName});
+    }
   }
 
 // get current playtime
@@ -115,6 +124,11 @@ class Room extends Component {
     console.log(`movieStarted`);
     this.syncMovie();
   }
+  sendMessage = (message) => {
+    socket.emit(`createMessage`, {
+      text: message
+    });
+  }
 
   playItem = (e) => {
     console.log(e.target.innerHTML);
@@ -133,7 +147,8 @@ class Room extends Component {
     return (
       <div>
         <Link to="/" >Home</Link>
-          <ReactPlayer
+          { this.state.currentVideo?
+            (<ReactPlayer
             ref={this.ref}
             url={this.state.currentVideo}
             config={{ youtube: { playerVars: { showinfo: 0 }}}}
@@ -152,9 +167,7 @@ class Room extends Component {
             onProgress={this.onProgress}
             onDuration={this.onDuration}
             onPlaying={this.onPlaying}
-            />
-        <br/>
-        <br/>
+            />) : (null)}
         <button onClick={this.syncMovie}>Sync</button>
 
         <form onSubmit={this.handelAddToPlaylist}>
@@ -166,9 +179,61 @@ class Room extends Component {
           movies={this.state.playlist}
           playItem={this.playItem}
           />
+        <Chat
+          messages={this.state.messages}
+          setNickname={this.setNickname}
+          nickNameIsSet={!this.state.nickName}
+          sendMessage={this.sendMessage}
+          />
+        <button onClick={this.sendMessage}>Send Message</button>
       </div>
     );
   }
 }
 
 export default Room;
+
+// [{ nickName: "William", text: "Hi test message",  }, { nickName: "Other Guy", text: "Hi test message 2",  }]
+
+
+  class Chat extends Component {
+    handelAddNickname = (e) => {
+      e.preventDefault();
+      const nickName = e.target.elements.nickName.value.trim();
+      if (nickName) {
+        this.props.setNickname(nickName);
+      }
+      e.target.elements.nickName.value = '';
+    }
+    handelSubmitMessage = (e) => {
+      e.preventDefault();
+      const message = e.target.elements.message.value.trim();
+      if (message) {
+        this.props.sendMessage(message);
+      }
+      e.target.elements.message.value = '';
+    }
+
+    render() {
+      return (
+        <chat className="chat">
+          <ul>
+          {
+            this.props.messages.map((message) => ( <li key={message.index}>{message.from}: {message.text}</li> ))
+          }
+        </ul>
+        { this.props.nickNameIsSet?
+          (<form onSubmit={this.handelAddNickname}>
+            <input autoComplete="off" type="text" name="nickName" autoFocus/>
+            <button>Add Chat Nick Name</button>
+          </form>)
+          :
+          (<form onSubmit={this.handelSubmitMessage}>
+            <input autoComplete="off" placeholder="Enter Message" type="text" name="message" autoFocus/>
+            <button>Submit</button>
+          </form>)
+        }
+        </chat>
+      );
+    }
+  }

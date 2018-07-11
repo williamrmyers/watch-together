@@ -93,6 +93,8 @@ io.on('connection', (socket) => {
     console.log(userData);
 
     socket.join(userData.roomName);
+    users.removeUser(socket.id);
+    users.addUser(socket.id, userData.nickName, userData.roomName);
 
     Room.find({"name": userData.roomName }).then((data) => {
       console.log('Join room info', userData);
@@ -101,8 +103,8 @@ io.on('connection', (socket) => {
       console.log(`error getting rooms`, e);
     });
 
-    users.removeUser(socket.id);
-    users.addUser(socket.id, 'client name', userData.roomName);
+    // users.removeUser(socket.id);
+    // users.addUser(socket.id, 'client name', userData.roomName);
     //
     // io.to(params.room).emit('updateUserList', users.getUserList(params.room));
     //
@@ -112,20 +114,16 @@ io.on('connection', (socket) => {
 
     callback()
   });
-  // Should check that the movie is at the righ time.
 
-  // Listens for time from Master
-  socket.on('masterSendStartTime', (time) => {
-    console.log('master is at', time);
-    // Should save to DB
+  // Listen for messages from client
+  socket.on('createMessage', (message, callback) => {
+    let user = users.getUser(socket.id);
+    console.log(user);
 
-    // Sends data to slaves
-    socket.broadcast.emit('startMediaAt', {
-      time: time
-    });
+      io.to(user.room).emit('newMessage', `${user.name}: ${message.text}`);
+      console.log(`${user.name}: ${message.text}`);
+    // callback('This is from the server.');
   });
-
-
 
   socket.on('disconnect', () => {
     console.log('User disconected.');
