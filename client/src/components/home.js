@@ -29,7 +29,7 @@ class Home extends React.Component {
   getRoomList = () => {
     // console.log('shouldComponentUpdate');
     socket.on('sendRoomList', (data) => {
-      // console.log('sendRoomList', data);
+      console.log('sendRoomList', data);
       this.setState(() => ({
         rooms: data.data
       }));
