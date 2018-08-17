@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import openSocket from 'socket.io-client';
-import { Route, withRouter, Redirect } from 'react-router-dom';
+import { Route, withRouter, Redirect, Link } from 'react-router-dom';
 
 import RoomList from './roomlist';
 
@@ -53,7 +53,7 @@ class Home extends React.Component {
         <div className="body">
           <header className="flex-header">
             <ul className="navigation" role="navigation">
-            <li><img src="watch-together-logo.svg" alt=""/> </li>
+            <li><Link to="/" ><img src="watch-together-logo.svg" alt=""/></Link></li>
             <li className="add-room-form">
                 <form onSubmit={this.handelAddRoom}>
                   <input autoComplete="off" placeholder="Room Name" type="text" name="roomName" />
