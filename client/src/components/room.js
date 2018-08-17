@@ -64,7 +64,7 @@ class Room extends Component {
     this.setState(() =>({
       startTime: data.rooms[0].currentMediaStartedAt,
       currentVideo: data.rooms[0].currentMedia,
-      roomName: data.rooms[0].room,
+      roomName: data.rooms[0].name,
       creator: data.rooms[0]._creator
     }));
   }
@@ -82,7 +82,7 @@ class Room extends Component {
     this.setState((prevState) => ({ messages: [...prevState.messages, { "nickName": "Test User", "text": message }] }));
   }
   setNickname = (nickName) => {
-    console.log(nickName);
+    console.log("setNickname: ",nickName);
     this.setState(() => ({ nickName }));
 
     const roomName = decodeURI(window.location.href.split("/")[4]);
@@ -147,30 +147,55 @@ class Room extends Component {
   render() {
     return (
       <div>
-        <Link to="/" >Home</Link>
-          { this.state.currentVideo?
-            (<ReactPlayer
-            ref={this.ref}
-            url={this.state.currentVideo}
-            config={{ youtube: { playerVars: { showinfo: 0 }}}}
-            controls={true}
-            playing={true}
-            muted={true}
+        <div className="body">
+              <header className="flex-header">
+                <ul className="navigation" role="navigation">
+                <li><Link to="/"><img src="../watch-together-logo.svg" alt="watch-together-logo.svg"/></Link></li>
+                </ul>
+              </header>
+              <main className="flex-main">
+                  <nav className="flex-nav">
 
-            onReady={() => console.log('onReady')}
-            onStart={this.movieStarted}
-            onPlay={this.onPlay}
-            onPause={this.onPause}
-            onBuffer={() => console.log('onBuffer')}
-            onSeek={e => console.log('onSeek', e)}
-            onEnded={this.onEnded}
-            onError={e => console.log('onError', e)}
-            onProgress={this.onProgress}
-            onDuration={this.onDuration}
-            onPlaying={this.onPlaying}
-            />) : (null)}
-        <button onClick={this.syncMovie}>Sync</button>
+                  </nav>
+                  <article className="flex-article video-main">
+                    <h2 className="room-name">{this.state.roomName}</h2>
+                      { this.state.currentVideo?
+                        (<ReactPlayer
+                        className='embed-container'
+                        ref={this.ref}
+                        url={this.state.currentVideo}
+                        config={{ youtube: { playerVars: { showinfo: 0 }}}}
+                        controls={true}
+                        playing={true}
+                        muted={true}
+                        height={0}
+                        width={'100%'}
 
+                        onReady={() => console.log('onReady')}
+                        onStart={this.movieStarted}
+                        onPlay={this.onPlay}
+                        onPause={this.onPause}
+                        onBuffer={() => console.log('onBuffer')}
+                        onSeek={e => console.log('onSeek', e)}
+                        onEnded={this.onEnded}
+                        onError={e => console.log('onError', e)}
+                        onProgress={this.onProgress}
+                        onDuration={this.onDuration}
+                        onPlaying={this.onPlaying}
+                        />) : (null)}
+                    <button onClick={this.syncMovie} name="sync" type="button">Sync</button>
+                  </article>
+                      <Chat
+                        messages={this.state.messages}
+                        setNickname={this.setNickname}
+                        nickNameIsSet={!this.state.nickName}
+                        sendMessage={this.sendMessage}
+                        />
+              </main>
+        </div>
+        {/*Design END*/}
+        {/*
+          Playlist feature to be added
         <form onSubmit={this.handelAddToPlaylist}>
           <input autoComplete="off" type="text" name="addToPlaylist" />
           <button>Add to playlist</button>
@@ -180,13 +205,7 @@ class Room extends Component {
           movies={this.state.playlist}
           playItem={this.playItem}
           />
-        <Chat
-          messages={this.state.messages}
-          setNickname={this.setNickname}
-          nickNameIsSet={!this.state.nickName}
-          sendMessage={this.sendMessage}
-          />
-        <button onClick={this.sendMessage}>Send Message</button>
+          */}
       </div>
     );
   }

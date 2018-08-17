@@ -21,24 +21,24 @@ import React, { Component } from 'react';
 
     render() {
       return (
-        <chat className="chat">
-          <ul>
-          {
-            this.props.messages.map((message) => ( <li key={message.index}>{message.from}: {message.text}</li> ))
-          }
-        </ul>
-        { this.props.nickNameIsSet?
-          (<form onSubmit={this.handelAddNickname}>
-            <input autoComplete="off" type="text" name="nickName" autoFocus/>
-            <button>Add Chat Nick Name</button>
-          </form>)
-          :
-          (<form onSubmit={this.handelSubmitMessage}>
-            <input autoComplete="off" placeholder="Enter Message" type="text" name="message" autoFocus/>
-            <button>Submit</button>
-          </form>)
-        }
-        </chat>
+          <aside className="flex-aside video-aside">
+            <ul className="chat-box">
+              {
+                this.props.messages.map((message) => ( <li key={message.index}> {message.from}{message.text}</li> ))
+              }
+            </ul>
+            { this.props.nickNameIsSet?
+              (<form onSubmit={this.handelAddNickname}>
+                <input autoComplete="off" type="text" name="nickName" autoFocus/>
+                <button>Add Chat Nick Name</button>
+              </form>)
+              :
+              (<form onSubmit={this.handelSubmitMessage}>
+                <input autoComplete="off" placeholder="Type a Message!" type="text" name="message" autoFocus/>
+                <button>Submit</button>
+              </form>)
+            }
+          </aside>
       );
     }
   }
