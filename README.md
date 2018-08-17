@@ -1,8 +1,15 @@
 # watch-together
 Watch youtube videos together
 
-
+Get Started
 ```
-Start Dev Server 
+clone
+npm install
+cd client
+npm install
+```
+
+Start Dev Server
+```
 npm run dev
 ```

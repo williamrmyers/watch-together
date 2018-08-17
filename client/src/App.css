@@ -6,3 +6,210 @@
   height: 400px;
   width:300px;
 }
+
+* {
+    margin: 2px;
+}
+
+.body {
+    font-size: 24px;
+    color: white;
+    height: 100vh;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+/*.flex-header {
+    background-color: #5070B5;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}*/
+.navigation {
+  display: flex;
+}
+
+.add-room-form {
+  margin-left: auto;
+  margin-right: auto/*this will push aside the other flex-items and the bird takes the remaining space!*/
+}
+
+/*NAV*/
+.navigation {
+  /* Menu Bar: */
+  background: #FFFFFF;
+  border: 1px solid #000000;
+  box-shadow: 0 10px 4px 0 rgba(0,0,0,0.50);
+}
+.navigation li {
+  cursor: pointer;
+}
+.navigation li:hover{
+  color: rgba(85,172,238 ,1);
+}
+.add-room-form {
+  color: rgba(85,172,238 ,1);
+  font-size: 1.3em;
+}
+
+.navigation button {
+  /* Rectangle 5: */
+  background: #000000;
+  /* Add Room: */
+  font-family: PTSans-CaptionBold;
+  /*font-size: 21px;*/
+  color: #FFFFFF;
+  letter-spacing: 0.14px;
+  text-align: center;
+}
+.navigation img {
+  width: 40px;
+  height: 40px;
+}
+
+.navigation input {
+  /* Rectangle 4: */
+  background: #FFFFFF;
+  border: 1px solid #2F2F2F;
+  border-radius: 5px;
+  /* URL: */
+  font-size: 12px;
+  color: #9B9B9B;
+  letter-spacing: 0.14px;
+}
+
+/*Nav*/
+.flex-main {
+    display: flex;
+    flex: 1;
+}
+
+.flex-nav {
+    background-color: white;
+    flex: 1 1 5rem;
+}
+
+.flex-article {
+    flex: 3 3 60%;
+    text-align: left;
+    /* Background: */
+    background: #FFF131;
+    color: black;
+    padding: 20px;
+    border: 1px solid #000000;
+}
+.flex-article h2 {
+  /* ROOMS: */
+  font-family: PTSans-Caption;
+  font-size: 45px;
+  color: #000000;
+}
+.flex-article li {
+  list-style: none;
+  /* Rectangle 8: */
+  background: #FFFFFF;
+  border: 1px solid #000000;
+  box-shadow: 0 4px 4px 0 rgba(0,0,0,0.50);
+  /*Box text*/
+  font-family: PTSans-Caption;
+  font-size: 18px;
+  color: #000000;
+  /* Rectangle: */
+  /*background: #D8D8D8;
+  border: 1px solid #979797;*/
+  padding: 15px;
+}
+.flex-article a {
+  color: black;
+}
+
+/*ROOM PAGE*/
+.video-main {
+  flex: 3 3 30%;
+}
+.video-main .room-name {
+  font-size: 30px;
+}
+
+/*ROOM PAGE*/
+
+.flex-aside {
+    background-color: white;
+    flex: 1 1 5rem;
+}
+/*Youtube Styles*/
+.embed-container {
+  position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; max-width: 100%; } .embed-container iframe, .embed-container object, .embed-container embed { position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  }
+.video-main button {
+  /* Rectangle 7: */
+  background: #000000;
+  /* Chat: */
+  font-family: PTSans-Caption;
+  font-size: 9px;
+  color: #FFFFFF;
+}
+
+.video-aside {
+    flex: 1 1 20%;
+    /* Rectangle 3: */
+    background: #FBF9F9;
+    border: 1px solid #454545;
+    display: flex;
+    flex-direction: column;
+}
+.video-aside .chat-box {
+  /* Chat Text Copy: */
+  text-align: left;
+  font-family: PTSans-Caption;
+  font-size: 9px;
+  color: #000000;
+  letter-spacing: 0.2px;
+  flex-grow: 1;
+}
+.video-aside form {
+  text-align: right;
+  margin-bottom: auto;
+}
+
+.video-aside input[type=text] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  /* Chat Textbox: */
+  background: #FFFFFF;
+  border: 1px solid #979797;
+}
+.video-aside button {
+  /* Rectangle 7: */
+  background: #000000;
+  /* Chat: */
+  font-family: PTSans-Caption;
+  font-size: 9px;
+  color: #FFFFFF;
+}
+
+.video-aside .chat-box .user-name{
+  /* Name Copy 2: */
+  font-family: PTSans-CaptionBold;
+  font-size: 9px;
+  color: #000000;
+  letter-spacing: 0.2px;
+}
+
+.flex-footer {
+  background-color: black;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+@media all and (max-width: 540px) {
+    .flex-main {
+        flex-direction: column;
+    }
+}

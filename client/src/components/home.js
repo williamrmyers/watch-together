@@ -50,19 +50,37 @@ class Home extends React.Component {
     }
   render () {
     return (
-      <div>
-        <h2>Create a room</h2>
-          <form onSubmit={this.handelAddRoom}>
-            <input autoComplete="off" placeholder="Room Name" type="text" name="roomName" />
-            <input autoComplete="off" placeholder="Chat Nickname" type="text" name="nickName" />
-            <input autoComplete="off" placeholder="Youtube Video" type="text" name="video" />
-            <button>Create new Room</button>
-          </form>
+        <div className="body">
+          <header className="flex-header">
+            <ul className="navigation" role="navigation">
+            <li><img src="watch-together-logo.svg" alt=""/> </li>
+            <li className="add-room-form">
+                <form onSubmit={this.handelAddRoom}>
+                  <input autoComplete="off" placeholder="Room Name" type="text" name="roomName" />
+                  <input autoComplete="off" placeholder="Chat Nickname" type="text" name="nickName" />
+                  <input autoComplete="off" placeholder="Youtube Video" type="text" name="video" />
+                  <button>Add Room</button>
+                </form>
+            </li>
+            </ul>
+          </header>
+          <main className="flex-main">
+              <nav className="flex-nav">
 
-          <RoomList
-            rooms={this.state.rooms}
-            />
-      </div>
+              </nav>
+              <article className="flex-article">
+                <h2>ROOMS</h2>
+
+                  <RoomList
+                    rooms={this.state.rooms}
+                    />
+
+              </article>
+              <aside className="flex-aside">
+
+              </aside>
+          </main>
+        </div>
     );
   }
 };
