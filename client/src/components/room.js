@@ -160,7 +160,8 @@ class Room extends Component {
                   <article className="flex-article video-main">
                     <h2 className="room-name">{this.state.roomName}</h2>
                       { this.state.currentVideo?
-                        (<ReactPlayer
+                        (<div>
+                          <ReactPlayer
                         className='embed-container'
                         ref={this.ref}
                         url={this.state.currentVideo}
@@ -182,8 +183,12 @@ class Room extends Component {
                         onProgress={this.onProgress}
                         onDuration={this.onDuration}
                         onPlaying={this.onPlaying}
-                        />) : (null)}
-                    <button onClick={this.syncMovie} name="sync" type="button">Sync</button>
+                        />
+
+                        <button onClick={this.syncMovie} name="sync" type="button">Sync</button>
+                        
+                        </div>) : (null)}
+
                   </article>
                       <Chat
                         messages={this.state.messages}

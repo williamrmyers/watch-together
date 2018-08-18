@@ -70,6 +70,7 @@ class Home extends React.Component {
               </nav>
               <article className="flex-article">
                 <h2>ROOMS</h2>
+                  <p>Watch Videos with your friends (or Strangers). Add a link to <a href="https://www.youtube.com/">Youtube</a>  ,<a href="https://vimeo.com/">Vimeo</a> or <a href="https://soundcloud.com/">Soundcloud</a>. Checkout <a href="https://www.reddit.com/r/fullmoviesonyoutube/">/r/fullmoviesonyoutube</a></p>
 
                   <RoomList
                     rooms={this.state.rooms}

@@ -29,13 +29,13 @@ import React, { Component } from 'react';
             </ul>
             { this.props.nickNameIsSet?
               (<form onSubmit={this.handelAddNickname}>
-                <input autoComplete="off" type="text" name="nickName" autoFocus/>
+                <input autoComplete="off" placeholder="ENTER A NICKNAME TO START"  type="text" name="nickName" autoFocus/>
                 <button>Add Chat Nick Name</button>
               </form>)
               :
               (<form onSubmit={this.handelSubmitMessage}>
                 <input autoComplete="off" placeholder="Type a Message!" type="text" name="message" autoFocus/>
-                <button>Submit</button>
+                <button>Chat</button>
               </form>)
             }
           </aside>

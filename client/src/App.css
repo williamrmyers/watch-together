@@ -117,6 +117,10 @@ ul {
 .flex-article a {
   color: black;
 }
+.flex-article p {
+  font-family: PTSans-Caption;
+  font-size: 12px;
+}
 
 /*ROOM PAGE*/
 .video-main {
