@@ -7,7 +7,7 @@ import moment from 'moment';
 import Playlist from './playlist';
 import Chat from './chat';
 
-const socket = openSocket('http://localhost:8080');
+const socket = openSocket( process.env.PORT );
 
 class Room extends Component {
   constructor(props)

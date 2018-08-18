@@ -4,7 +4,7 @@ import { Route, withRouter, Redirect, Link } from 'react-router-dom';
 
 import RoomList from './roomlist';
 
-const socket = openSocket('http://localhost:8080');
+const socket = openSocket( process.env.PORT );
 // rooms: [
 //   { id:1, name: 'Scary Movies', currentMovie: 'Fright Night', viewers: 82 },
 //   { id:2, name: 'MURDER', currentMovie: 'Hostel', viewers: 39 },
