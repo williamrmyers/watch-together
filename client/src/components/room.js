@@ -151,7 +151,10 @@ class Room extends Component {
         <div className="body">
               <header className="flex-header">
                 <ul className="navigation" role="navigation">
-                <li><Link to="/"><img src="../watch-together-logo.svg" alt="watch-together-logo.svg"/></Link></li>
+                {/*
+                  <li><Link to="/"><img src="../watch-together-logo.svg" alt="watch-together-logo.svg"/></Link></li>
+                  */}
+                  <li><a href="/"><img src="../watch-together-logo.svg" alt="watch-together-logo.svg"/></a></li>
                 </ul>
               </header>
               <main className="flex-main">
