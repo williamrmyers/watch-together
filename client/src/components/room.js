@@ -168,7 +168,7 @@ class Room extends Component {
                         config={{ youtube: { playerVars: { showinfo: 0 }}}}
                         controls={true}
                         playing={true}
-                        muted={true}
+                        muted={false}
                         height={0}
                         width={'100%'}
 
@@ -186,7 +186,7 @@ class Room extends Component {
                         />
 
                         <button onClick={this.syncMovie} name="sync" type="button">Sync</button>
-                        
+
                         </div>) : (null)}
 
                   </article>
