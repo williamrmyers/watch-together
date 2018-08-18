@@ -69,7 +69,7 @@ ul {
   border-radius: 5px;
   /* URL: */
   font-size: 12px;
-  color: #9B9B9B;
+  /*color: #9B9B9B;*/
   letter-spacing: 0.14px;
 }
 
@@ -168,6 +168,7 @@ ul {
     border: 1px solid #454545;
     display: flex;
     flex-direction: column;
+
 }
 .video-aside .chat-box {
   /* Chat Text Copy: */
@@ -177,6 +178,9 @@ ul {
   color: #000000;
   letter-spacing: 0.2px;
   flex-grow: 1;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  height: 500px;
 }
 .video-aside form {
   text-align: right;
@@ -219,5 +223,9 @@ ul {
 @media all and (max-width: 540px) {
     .flex-main {
         flex-direction: column;
+    }
+    .video-aside .chat-box {
+      /* Chat Text Copy: */
+      height: auto;
     }
 }

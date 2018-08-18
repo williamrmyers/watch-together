@@ -56,7 +56,8 @@ class Room extends Component {
     // Get new Messages
     socket.on(`newMessage`, (message) => {
     this.newMessage(message);
-    console.log(message);
+    // Scrolls to new message.
+    document.getElementsByClassName("chat-box")[0].lastElementChild.scrollIntoView();
   });
   }
 
