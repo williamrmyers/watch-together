@@ -81,8 +81,8 @@ io.on('connection', (socket) => {
       });
       callback();
   });
-
-  Room.find({}).sort('-currentMediaStartedAt').then((data) => {
+  // This query gets movies that were started at least 4 hours ago
+  Room.find({  currentMediaStartedAt: { $gt: moment().unix() - 14400 }}).sort('-currentMediaStartedAt').then((data) => {
     socket.emit('sendRoomList', {data});
   }, (e) => {
     console.log(`error getting rooms`, e);
