@@ -92,6 +92,8 @@ io.on('connection', (socket) => {
   socket.on('join', (userData, callback) => {
     console.log(userData);
 
+    io.in(userData.roomName).emit('newMessage', `${userData.nickName} Joined Chat.`);
+
     socket.join(userData.roomName);
     users.removeUser(socket.id);
     users.addUser(socket.id, userData.nickName, userData.roomName);
