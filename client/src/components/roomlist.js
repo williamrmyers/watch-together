@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch, Link, NavLink, Redirect} from 'react-router-dom';
+import moment from 'moment';
 
 class RoomList extends Component {
   // { id:1, name: 'Scarry Movies', currentMovie: 'Fright Night', viewers: 82 }
@@ -9,7 +10,7 @@ class RoomList extends Component {
         <div>
           <ul>
             {
-              rooms.map((room) => (<li key={room._id} onClick={this.props.playItem}><strong><Link to={{ pathname: '/room/' + room.name}}>{room.name}</Link></strong>: currently Playing <br/></li>))
+              rooms.map((room) => (<li key={room._id} onClick={this.props.playItem}><strong><Link to={{ pathname: '/room/' + room.name}}>{room.name}</Link></strong>: Playing <br/></li>))
             }
           </ul>
         </div>

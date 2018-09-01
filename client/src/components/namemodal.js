@@ -39,7 +39,7 @@ class NameModal extends React.Component {
           contentLabel="Example Modal"
         >
 
-          <h4>Enter a Nickname</h4>
+          <h4>Enter your chat nickname</h4>
           <p>{this.props.modalMessage}</p>
           <form onSubmit={this.handleSetName}>
             <input autoComplete="off" type="text" name="nickName" />
