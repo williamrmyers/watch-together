@@ -76,8 +76,9 @@ class Home extends React.Component {
               </nav>
               <article className="flex-article">
                 <h2>ROOMS</h2>
+                <div className="intro">
                   <p>Watch Videos with your friends (or Strangers). Add a link to <a target="_blank" href="https://www.youtube.com/">Youtube</a>  ,<a target="_blank" href="https://vimeo.com/">Vimeo</a> or <a target="_blank" href="https://soundcloud.com/">Soundcloud</a>. Checkout <a target="_blank" href="https://www.reddit.com/r/fullmoviesonyoutube/">/r/fullmoviesonyoutube</a></p>
-
+                </div>
                   <RoomList
                     rooms={this.state.rooms}
                     />
