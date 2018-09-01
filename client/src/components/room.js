@@ -3,9 +3,11 @@ import ReactPlayer from 'react-player';
 import { Link } from 'react-router-dom';
 import openSocket from 'socket.io-client';
 import moment from 'moment';
+import Modal from 'react-modal';
 
 import Playlist from './playlist';
 import Chat from './chat';
+import NameModal from './namemodal';
 
 const socket = openSocket( process.env.PORT );
 
@@ -38,7 +40,8 @@ class Room extends Component {
     nickName: false,
     timeToStart:0,
     currentMediaStartedAt:0,
-    messages: []
+    messages: [],
+    userList: []
   }
 
   componentDidMount(props) {
@@ -59,6 +62,8 @@ class Room extends Component {
     // Scrolls to new message.
     document.getElementsByClassName("chat-box")[0].lastElementChild.scrollIntoView();
   });
+  // Launch modal
+
   }
 
   creationData = (data) => {
@@ -66,7 +71,8 @@ class Room extends Component {
       startTime: data.rooms[0].currentMediaStartedAt,
       currentVideo: data.rooms[0].currentMedia,
       roomName: data.rooms[0].name,
-      creator: data.rooms[0]._creator
+      creator: data.rooms[0]._creator,
+      userList: data.users
     }));
   }
 
@@ -82,14 +88,20 @@ class Room extends Component {
   newMessage = (message, prevState) => {
     this.setState((prevState) => ({ messages: [...prevState.messages, { "nickName": "Test User", "text": message }] }));
   }
-  setNickname = (nickName) => {
-    console.log("setNickname: ",nickName);
+
+// Modal Functions
+  handleSetName = (nickName) => {
+    // Throw error if Failure to Connect
+    // Else
+    // Join Room
     this.setState(() => ({ nickName }));
 
     const roomName = decodeURI(window.location.href.split("/")[4]);
     if (!this.props.isCreator) {
       this.joinRoom({roomName, nickName});
     }
+    // Alert User if Nickname Exisists already
+    // Close Modal
   }
 
 // get current playtime
@@ -202,19 +214,24 @@ class Room extends Component {
                         />
               </main>
         </div>
-        {/*Design END*/}
-        {/*
-          Playlist feature to be added
-        <form onSubmit={this.handelAddToPlaylist}>
-          <input autoComplete="off" type="text" name="addToPlaylist" />
-          <button>Add to playlist</button>
-        </form>
+          {/*Design END*/}
+          {/*
+            Playlist feature to be added
+          <form onSubmit={this.handelAddToPlaylist}>
+            <input autoComplete="off" type="text" name="addToPlaylist" />
+            <button>Add to playlist</button>
+          </form>
 
-        <Playlist
-          movies={this.state.playlist}
-          playItem={this.playItem}
-          />
-          */}
+          <Playlist
+            movies={this.state.playlist}
+            playItem={this.playItem}
+            />
+            */}
+          <NameModal
+            handleSetName={this.handleSetName}
+            modalIsOpen={!this.state.nickName}
+            modalMessage={""}
+            />
       </div>
     );
   }
