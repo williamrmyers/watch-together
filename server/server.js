@@ -129,6 +129,13 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     console.log('User disconected.');
+    let user = users.removeUser(socket.id);
+
+    if (user) {
+      // Condition needs to be added to the front end to handle the fact that the other room data is not sent with this request
+      // io.to(user.room).emit('updateUserList', users.getUserList(user.room));
+      io.to(user.room).emit('newMessage', `${user.name} has left the chat.`);
+    }
   });
 });
 
