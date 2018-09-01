@@ -23,7 +23,7 @@ class Home extends React.Component {
 
 
   componentDidMount (props) {
-    this.getRoomList();
+
   }
 
   getRoomList = () => {
@@ -42,8 +42,14 @@ class Home extends React.Component {
       const roomName = e.target.elements.roomName.value.trim();
       const nickName = e.target.elements.nickName.value.trim();
       const video = e.target.elements.video.value.trim();
-      // console.log(roomName);
-      if ("Validation") {
+
+      const match = this.state.rooms.filter(room => room.name === roomName).length > 0;
+
+      if (match) {
+        alert('Room of that name already exists.');
+      } else if (!roomName || !nickName || !video) {
+        alert('Fill in all of the fields to create a room.')
+      } else {
         this.props.history.push(`/room/${roomName}`);
         this.props.setRoomName({roomName, nickName, video});
       }

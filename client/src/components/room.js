@@ -76,6 +76,26 @@ class Room extends Component {
     }));
   }
 
+  newMessage = (message, prevState) => {
+    this.setState((prevState) => ({ messages: [...prevState.messages, { "nickName": "Test User", "text": message }] }));
+  }
+
+// Modal Functions
+  handleSetName = (nickName) => {
+    const roomName = decodeURI(window.location.href.split("/")[4]);
+
+    if (!this.props.isCreator) {
+      // Futire Validation
+      // Throw error if Failure to Connect
+      // Else
+      // Join Room
+      this.joinRoom({roomName, nickName});
+    }
+    // Alert User if Nickname Exisists already
+    // Close Modal
+    this.setState(() => ({ nickName }));
+  }
+  // Unused
   joinRoom = (userData) => {
     socket.emit('join', userData , (err) => {
       if (err) {
@@ -84,24 +104,6 @@ class Room extends Component {
         console.log('No Error.');
       }
     });
-  }
-  newMessage = (message, prevState) => {
-    this.setState((prevState) => ({ messages: [...prevState.messages, { "nickName": "Test User", "text": message }] }));
-  }
-
-// Modal Functions
-  handleSetName = (nickName) => {
-    // Throw error if Failure to Connect
-    // Else
-    // Join Room
-    this.setState(() => ({ nickName }));
-
-    const roomName = decodeURI(window.location.href.split("/")[4]);
-    if (!this.props.isCreator) {
-      this.joinRoom({roomName, nickName});
-    }
-    // Alert User if Nickname Exisists already
-    // Close Modal
   }
 
 // get current playtime
@@ -229,7 +231,7 @@ class Room extends Component {
             */}
           <NameModal
             handleSetName={this.handleSetName}
-            modalIsOpen={!this.state.nickName}
+            modalIsOpen={!this.state.nickName && !this.props.nickName}
             modalMessage={""}
             />
       </div>
